@@ -13,7 +13,32 @@ sumNextMatch ls@(_ :: _) = help (length ls) (cycle ls)
         else
           0
 
+sumHalfwayMatch : List Int -> Int
+sumHalfwayMatch [] = 0
+sumHalfwayMatch ls@(_ :: _) = help (length ls) (cycle ls)
+  where
+    help : Nat -> Stream Int -> Int
+    help Z _ = 0
+    help (S n) (x :: y :: xs) =
+      help n (y :: xs) +
+        if x == y then
+          x
+        else
+          0
+          
+          
+prepareInput : String -> List Int
+prepareInput input =
+  cast . singleton <$> unpack (trim input)
+          
+
 export
-solve : String -> String
-solve input =
-  show $ sumNextMatch (cast . singleton <$> unpack (trim input))
+solve1 : String -> String
+solve1 =
+  show . sumNextMatch . prepareInput
+
+
+export
+solve2 : String -> String
+solve2 =
+  show . sumHalfwayMatch . prepareInput
