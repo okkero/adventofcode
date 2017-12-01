@@ -1,5 +1,18 @@
 module Day1
 
+sumOffsetMatch : Nat -> List Int -> Int
+sumOffsetMatch _ [] = 0
+sumOffsetMatch offset ls@(_ :: _) = help (length ls) (cycle ls)
+  where
+    help : Nat -> (s : Stream Int) -> {default (drop offset s) offsetStream : Stream Int} -> Int
+    help Z _ = 0
+    help (S n) (x :: xs) {offsetStream = y :: ys} =
+      help n xs {offsetStream = ys} +
+        if x == y then
+          x
+        else
+          0
+
 sumNextMatch : List Int -> Int
 sumNextMatch [] = 0
 sumNextMatch ls@(_ :: _) = help (length ls) (cycle ls)
