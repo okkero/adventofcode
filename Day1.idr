@@ -13,14 +13,14 @@ sumNextMatch ls@(_ :: _) = help (length ls) (cycle ls)
         else
           0
 
-sumHalfwayMatch : List Int -> Int
+sumHalfwayMatch : (ls : List Int) -> Int
 sumHalfwayMatch [] = 0
 sumHalfwayMatch ls@(_ :: _) = help (length ls) (cycle ls)
   where
-    help : Nat -> Stream Int -> Int
+    help : Nat -> (s : Stream Int) -> {default (drop (length ls `div` 2) s) offset : Stream Int} -> Int
     help Z _ = 0
-    help (S n) (x :: y :: xs) =
-      help n (y :: xs) +
+    help (S n) (x :: xs) {offset = y :: ys} =
+      help n xs {offset = ys} +
         if x == y then
           x
         else
