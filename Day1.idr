@@ -45,4 +45,4 @@ solve2 =
 
 export
 puzzle : Puzzle
-puzzle = MkPuzzle solve1 solve2
+puzzle = MkPuzzle "Inverse Captcha" solve1 solve2
