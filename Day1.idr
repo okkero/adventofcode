@@ -1,5 +1,12 @@
 module Day1
 
+import Puzzle
+import Data.Nat.Views
+
+
+%default total
+
+
 sumOffsetMatch : Nat -> List Int -> Int
 sumOffsetMatch _ [] = 0
 sumOffsetMatch offset ls@(_ :: _) = help (length ls) (cycle ls)
@@ -14,44 +21,28 @@ sumOffsetMatch offset ls@(_ :: _) = help (length ls) (cycle ls)
           0
 
 sumNextMatch : List Int -> Int
-sumNextMatch [] = 0
-sumNextMatch ls@(_ :: _) = help (length ls) (cycle ls)
-  where
-    help : Nat -> Stream Int -> Int
-    help Z _ = 0
-    help (S n) (x :: y :: xs) =
-      help n (y :: xs) +
-        if x == y then
-          x
-        else
-          0
+sumNextMatch = sumOffsetMatch 1
 
-sumHalfwayMatch : (ls : List Int) -> Int
-sumHalfwayMatch [] = 0
-sumHalfwayMatch ls@(_ :: _) = help (length ls) (cycle ls)
-  where
-    help : Nat -> (s : Stream Int) -> {default (drop (length ls `div` 2) s) offset : Stream Int} -> Int
-    help Z _ = 0
-    help (S n) (x :: xs) {offset = y :: ys} =
-      help n xs {offset = ys} +
-        if x == y then
-          x
-        else
-          0
+
+sumHalfwayMatch : List Int -> Int
+sumHalfwayMatch ls = sumOffsetMatch (divNatNZ (length ls) 2 SIsNotZ) ls
           
           
-prepareInput : String -> List Int
-prepareInput input =
+transformInput : String -> List Int
+transformInput input =
   cast . singleton <$> unpack (trim input)
           
 
-export
 solve1 : String -> String
 solve1 =
-  show . sumNextMatch . prepareInput
+  show . sumNextMatch . transformInput
+
+
+solve2 : String -> String
+solve2 =
+  show . sumHalfwayMatch . transformInput
 
 
 export
-solve2 : String -> String
-solve2 =
-  show . sumHalfwayMatch . prepareInput
+puzzle : Puzzle
+puzzle = MkPuzzle solve1 solve2
