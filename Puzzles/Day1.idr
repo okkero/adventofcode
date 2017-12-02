@@ -1,4 +1,4 @@
-module Day1
+module Puzzles.Day1
 
 import Puzzle
 import Data.Nat.Views

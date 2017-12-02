@@ -3,7 +3,7 @@ module Main
 import Data.Vect
 import Data.Fin
 
-import Day1
+import Puzzles.Day1
 import Puzzle
 
 
