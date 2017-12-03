@@ -4,15 +4,17 @@ import Data.Vect
 import Data.Fin
 
 import Puzzles.Day1
+import Puzzles.Day2
 import Puzzle
 
 
 %default total
 
 
-puzzles : Vect 1 Puzzle
+puzzles : Vect 2 Puzzle
 puzzles =
   [ Day1.puzzle
+  , Day2.puzzle
   ]
 
 
@@ -29,8 +31,8 @@ showOptions : Vect n Puzzle -> IO ()
 showOptions xs =
   do
     forIndexed xs $ \(dayIdx, puzzle) =>
-      putStrLn $ show (S dayIdx) ++ ": " ++ name puzzle
-    putStrLn "0: exit"
+      putStrLn $ show (S dayIdx) ++ ":\t\t" ++ name puzzle
+    putStrLn "else:\t\texit"
   where
     forIndexed : {default Z idx : Nat} -> Vect n a -> ((Nat, a) -> IO ()) -> IO ()
     forIndexed [] _ = pure ()
@@ -50,7 +52,7 @@ main = do
   putStrLn $ "\n\n" ++ name
   
   Right input <- readInput (finToNat $ FS dayIdx)
-    | Left error => (putStrLn $ show error)
+    | Left error => (putStrLn $ "Error: " ++ show error)
   putStrLn $ "Part 1: " ++ solve1 input
   putStrLn $ "Part 2: " ++ solve2 input
   pure ()
