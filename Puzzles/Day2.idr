@@ -6,10 +6,6 @@ import Puzzle
 
 %default total
 
-isZero : (i : Int) -> Dec (i = 0)
-isZero 0 = Yes Refl
-isZero _ = No believe_me
-
 
 safeMod : Int -> (divisor : Int) -> (Not (divisor = 0)) -> Int
 safeMod dividend divisor _ =
@@ -46,19 +42,20 @@ minMax (x :: xs) {prf = IsNonEmpty} = minMax' (x, x) xs
 findEvenDivision : List Int -> Maybe Int
 findEvenDivision [] = Nothing
 findEvenDivision (x :: xs) =
-  case isZero x of
+  case decEq x 0 of
     Yes _ =>
       findEvenDivision xs
     
     No xContra =>
       maybe (findEvenDivision xs) Just $ find (const True) $ catMaybes $
-        (\y =>
-          case isZero y of
+        (\y : Int =>
+          case decEq y 0 of
             Yes _ =>
               findEvenDivision xs
                 
             No yContra =>
-              maybe (safeEvenDiv y x xContra) Just (safeEvenDiv x y yContra)
+              maybe (safeEvenDiv y x xContra) Just
+                (safeEvenDiv x y yContra)
         ) <$> xs
 
 
