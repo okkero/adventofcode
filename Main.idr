@@ -5,16 +5,19 @@ import Data.Fin
 
 import Puzzles.Day1
 import Puzzles.Day2
+import Puzzles.Day4
 import Puzzle
 
 
 %default total
 
 
-puzzles : Vect 2 Puzzle
+puzzles : Vect 4 Puzzle
 puzzles =
   [ Day1.puzzle
   , Day2.puzzle
+  , MkPuzzle "_" id id
+  , Day4.puzzle
   ]
 
 

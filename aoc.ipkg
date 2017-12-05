@@ -2,3 +2,6 @@ package aoc
 
 
 modules = Main
+
+
+pkgs = contrib
