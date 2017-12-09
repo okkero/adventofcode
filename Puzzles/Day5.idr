@@ -93,10 +93,63 @@ jumpLeft Z zv = zv
 jumpLeft (S n) zv = jumpLeft n $ left zv
 
 
-performStep : ZipVect l c Int -> Maybe (ZipVect l c Int)
-performStep (Zip xs x ys) = ?abc
+data Instruction
+  = Right Nat
+  | Left Nat
+  
+  
+natValue : Instruction -> Nat
+natValue (Right n) = n
+natValue (Left n) = S n
+  
+  
+integerToInstruction : Integer -> Instruction
+integerToInstruction n =
+  if n >= 0 then
+    Right $ fromInteger n
+  else
+    Left $ fromInteger (n + 1)
+    
+
+touchAtCursor : ZipVect l c Instruction -> ZipVect l c Instruction
+touchAtCursor (Zip xs x ys) = Zip xs (touch x) ys
+  where
+    touch : Instruction -> Instruction
+    touch (Right n) = Right (S n)
+    touch (Left (S n)) = Left n
+    touch (Left Z) = Right Z
+
+
+performStep : ZipVect l c Instruction -> Maybe (c2 ** ZipVect l c2 Instruction)
+performStep {c} {l = S (c + n2)} (Zip xs x ys) with (x)
+  | Right n with (isLTE (S (c + n)) (S (c + n2)))
+    | Yes lteP = Just (_ ** jumpRight n (touchAtCursor (Zip xs x ys)))
+    | No contra = Nothing
+  | Left n with (decEq n m)
+    | Yes refl = Just (c ** jumpLeft n (touchAtCursor (rewrite refl in Zip xs x ys)))
+    | No contra = Nothing
+    
+    
+prepareInput : String -> Maybe (l ** ZipVect l Z Instruction)
+prepareInput input =
+  case list of
+    (x :: xs) => Just (_ ** fromVect $ fromList (x :: xs))
+    [] => Nothing
+  where
+    list : List Instruction
+    list = integerToInstruction . cast <$> lines input
+
+  
 
 solve1 : String -> String
+solve1 input with (prepareInput input)
+  | Nothing = "At least one element expected"
+  | Just (_ ** instructions) = "got elements!"
+    where
+      performSteps : {default Z acc : Nat} -> ZipVect l c Instruction -> Nat
+      performSteps {acc} zv with (performStep zv)
+        | Just ((a + b) ** nextZV) = performSteps {acc = S acc} nextZV
+        | Nothing = acc
 
 
 solve2 : String -> String
