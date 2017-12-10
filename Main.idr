@@ -6,18 +6,25 @@ import Data.Fin
 import Puzzles.Day1
 import Puzzles.Day2
 import Puzzles.Day4
+import Puzzles.Day5
 import Puzzle
 
 
 %default total
 
 
-puzzles : Vect 4 Puzzle
+puzzlesCount : Nat
+puzzlesCount = 5
+
+
+partial
+puzzles : Vect Main.puzzlesCount Puzzle
 puzzles =
   [ Day1.puzzle
   , Day2.puzzle
   , MkPuzzle "_" id id
   , Day4.puzzle
+  , Day5.puzzle
   ]
 
 
@@ -42,12 +49,12 @@ showOptions xs =
     forIndexed {idx} (x :: xs) action =
       action (idx, x) >>= \_ => forIndexed {idx = S idx} xs action
 
-
+partial
 main : IO ()
 main = do
   putStrLn "Advent of Code 2017 -- Solutions by okkero\n"
   showOptions puzzles
-  Just (FS dayIdx) <- (\i => integerToFin i (S $ length puzzles)) . cast <$> getLine
+  Just (FS dayIdx) <- (\i => integerToFin i (S puzzlesCount)) . cast <$> getLine
     | Just FZ => (putStrLn "Goodbye")
     | Nothing => (putStrLn "Invalid input")
   let (MkPuzzle name solve1 solve2) = index dayIdx puzzles
