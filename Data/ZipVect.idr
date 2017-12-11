@@ -5,11 +5,23 @@ import Data.Vect
 
 %default total
 
+export
+natToFin : (bound : Nat) -> (n : Nat) -> LT n bound -> Fin bound
+
+export
+foo : (n1 : Nat) -> (n2 : Nat) -> LT n1 (S (n1 + n2))
+foo Z n2 = LTESucc LTEZero
+foo Z Z = LTESucc LTEZero
+foo (S j) k = LTESucc $ foo j k
+
 public export
-data ZipVect : (len : Nat) -> (cursor : Nat) -> Type -> Type where
-  Zip : Vect n1 a -> a -> Vect n2 a -> ZipVect (S (n1 + n2)) n1 a
+data ZipVect : (len : Nat) -> (cursor : Fin len) -> Type -> Type where
+  Zip : Vect n1 a ->
+        a ->
+        Vect n2 a ->
+        ZipVect (S (n1 + n2)) (natToFin (S (n1 + n2)) n1 (foo n1 n2)) a
   
-  
+{-  
 export
 fromVect : Vect (S n) a -> ZipVect (S n) Z a
 fromVect (x :: xs) = Zip [] x xs
@@ -95,3 +107,4 @@ export
 jumpLeft : (n : Nat) -> ZipVect l (n + c) a -> ZipVect l c a
 jumpLeft Z zv = zv
 jumpLeft (S n) zv = jumpLeft n $ left zv
+-}
