@@ -7,6 +7,9 @@ import Data.Vect
 
 export
 natToFin : (bound : Nat) -> (n : Nat) -> LT n bound -> Fin bound
+natToFin (S b) Z prf = FZ
+natToFin (S b) (S n) (LTESucc lteP) = natToFin (S b) n (lteSuccRight lteP)
+  
 
 export
 foo : (n1 : Nat) -> (n2 : Nat) -> LT n1 (S (n1 + n2))
@@ -21,9 +24,9 @@ data ZipVect : (len : Nat) -> (cursor : Fin len) -> Type -> Type where
         Vect n2 a ->
         ZipVect (S (n1 + n2)) (natToFin (S (n1 + n2)) n1 (foo n1 n2)) a
   
-{-  
+
 export
-fromVect : Vect (S n) a -> ZipVect (S n) Z a
+fromVect : Vect (S n) a -> ZipVect (S n) FZ a
 fromVect (x :: xs) = Zip [] x xs
 
 export
@@ -107,4 +110,4 @@ export
 jumpLeft : (n : Nat) -> ZipVect l (n + c) a -> ZipVect l c a
 jumpLeft Z zv = zv
 jumpLeft (S n) zv = jumpLeft n $ left zv
--}
+
